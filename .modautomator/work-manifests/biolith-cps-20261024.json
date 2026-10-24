@@ -20,8 +20,7 @@
     "build.gradle",
     "gradle.properties",
     ".github/workflows/biolith_cps_candidate.yml",
-    "docs/BIOLITH_CPS_CANDIDATE.md",
-    ".modautomator/work-manifests/biolith-cps-20261024.json"
+    "docs/BIOLITH_CPS_CANDIDATE.md"
   ],
   "value_case": {
     "category": "measured_risk_reduction",
