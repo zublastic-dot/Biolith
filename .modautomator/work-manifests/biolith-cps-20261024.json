@@ -1,0 +1,34 @@
+{
+  "schema_version": 2,
+  "work_id": "biolith-cps-20261024",
+  "lease_id": "biolith-cps-20261024",
+  "worker_id": "codex-biolith-cps-20261024",
+  "repository": "zublastic-dot/biolith",
+  "work_branch": "work/codex-biolith-cps-20261024/iterator-reuse",
+  "base_commit": "996b7a468ce7c36d2883e70eae3a8c87a30bae63",
+  "resources": [
+    "domain:worldgen-performance",
+    "domain:biolith:search-traversal",
+    "repo:zublastic-dot/biolith",
+    "workspace:owner-pc:M/BiolithCps-20261024"
+  ],
+  "paths": [
+    "common/src/main/java/com/terraformersmc/biolith/impl/mixin/MixinSearchTree.java",
+    "common/src/main/java/com/terraformersmc/biolith/impl/biome/SearchTreeTraversalStack.java",
+    "tests/differential",
+    "build.gradle",
+    "gradle.properties",
+    ".github/workflows/biolith_cps_candidate.yml",
+    "docs/BIOLITH_CPS_CANDIDATE.md",
+    ".modautomator/work-manifests/biolith-cps-20261024.json"
+  ],
+  "value_case": {
+    "category": "material_future_work_reduction",
+    "statement": "Reduce Biolith search traversal allocations while preserving biome selection and all gameplay behavior.",
+    "acceptance": [
+      "Pinned-source differential parity for selected node identity, both distances, callback order and fallback state, including reentrancy and exceptions.",
+      "Successful NeoForge build and exact CI artifact provenance before server acceptance.",
+      "Real runtime, output parity and controlled CPS evidence before claiming a server improvement."
+    ]
+  }
+}

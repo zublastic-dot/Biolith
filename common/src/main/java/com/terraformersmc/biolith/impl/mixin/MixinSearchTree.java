@@ -3,7 +3,7 @@ package com.terraformersmc.biolith.impl.mixin;
 import com.terraformersmc.biolith.impl.Biolith;
 import com.terraformersmc.biolith.api.biome.BiolithFittestNodes;
 import com.terraformersmc.biolith.impl.biome.InterfaceSearchTree;
-import com.terraformersmc.biolith.impl.biome.SimpleArrayIterator;
+import com.terraformersmc.biolith.impl.biome.SearchTreeTraversalStack;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -16,8 +16,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-import java.util.Iterator;
-
 @Mixin(MultiNoiseUtil.SearchTree.class)
 public class MixinSearchTree<T> implements InterfaceSearchTree<T> {
     @Shadow
@@ -29,6 +27,10 @@ public class MixinSearchTree<T> implements InterfaceSearchTree<T> {
     @Unique
     private final ThreadLocal<MultiNoiseUtil.SearchTree.TreeLeafNode<T>> previousPenultimateNode = new ThreadLocal<>();
 
+    @Unique
+    private final ThreadLocal<SearchTreeTraversalStack<MultiNoiseUtil.SearchTree.TreeNode<T>>> biolith$traversalStack =
+            ThreadLocal.withInitial(SearchTreeTraversalStack::new);
+
     /*
      * This is a flattened, stack-based implementation of Mojang's recursive RTree search.
      * We also find the second-best fit, which can significantly expand the scope of the traversal.
@@ -36,12 +38,22 @@ public class MixinSearchTree<T> implements InterfaceSearchTree<T> {
      */
     @Override
     public BiolithFittestNodes<T> biolith$searchTreeGet(MultiNoiseUtil.NoiseValuePoint point, MultiNoiseUtil.NodeDistanceFunction<T> distanceFunction) {
+        // Modified by Zublastic, 2026-10-24: reuse traversal bookkeeping only.
+        SearchTreeTraversalStack<MultiNoiseUtil.SearchTree.TreeNode<T>> stack = biolith$traversalStack.get().acquire();
+        try {
+            return biolith$searchTreeGetWithStack(point, distanceFunction, stack);
+        } finally {
+            stack.release();
+        }
+    }
+
+    @Unique
+    private BiolithFittestNodes<T> biolith$searchTreeGetWithStack(MultiNoiseUtil.NoiseValuePoint point, MultiNoiseUtil.NodeDistanceFunction<T> distanceFunction,
+                                                               SearchTreeTraversalStack<MultiNoiseUtil.SearchTree.TreeNode<T>> stack) {
         long[] otherParameters = point.getNoiseValueList();
         MultiNoiseUtil.SearchTree.TreeNode<T> node = firstNode;
         long nodeDistance = Long.MAX_VALUE;
 
-        @SuppressWarnings("unchecked") // local array of non-reifiable type
-        Iterator<MultiNoiseUtil.SearchTree.TreeNode<T>>[] stack = new SimpleArrayIterator[64];
         int stackDepth = 0;
 
         MultiNoiseUtil.SearchTree.TreeLeafNode<T> ultimate = previousUltimateNode.get();
@@ -65,7 +77,7 @@ public class MixinSearchTree<T> implements InterfaceSearchTree<T> {
         // Enclosing braces are to force the compiler not to leak the pattern variables out of scope
         {
             if (node instanceof MultiNoiseUtil.SearchTree.TreeBranchNode<T> branchNode) {
-                stack[stackDepth] = new SimpleArrayIterator<>(branchNode.subTree);
+                stack.reset(stackDepth, branchNode.subTree);
             } else if (node instanceof MultiNoiseUtil.SearchTree.TreeLeafNode<T> leafNode) {
                 // TODO:  Turns out this is actually a thing.  Consider the implications.
                 //        Maybe implement some system to warn exactly once.
@@ -78,16 +90,16 @@ public class MixinSearchTree<T> implements InterfaceSearchTree<T> {
             }
         }
 
-        // Iteratively search the tree using a stack of simple array iterators to track our position
-        while (stack[stackDepth].hasNext()) {
+        // Iteratively search the tree using the same array/cursor traversal.
+        while (stack.hasNext(stackDepth)) {
             // Advance to the next available branch node
-            node = stack[stackDepth].next();
+            node = stack.next(stackDepth);
             nodeDistance = distanceFunction.getDistance(node, otherParameters);
 
             // Descend the branch until we find a leaf or the branch is no longer fitter
             while (node instanceof MultiNoiseUtil.SearchTree.TreeBranchNode<T> branchNode && penultimateDistance > nodeDistance) {
-                stack[++stackDepth] = new SimpleArrayIterator<>(branchNode.subTree);
-                node = stack[stackDepth].next();
+                stack.reset(++stackDepth, branchNode.subTree);
+                node = stack.next(stackDepth);
                 nodeDistance = distanceFunction.getDistance(node, otherParameters);
             }
 
@@ -107,7 +119,7 @@ public class MixinSearchTree<T> implements InterfaceSearchTree<T> {
             }
 
             // Ascend the branch until we have something to consume (or we're all done).
-            while (stackDepth > 0 && !stack[stackDepth].hasNext()) {
+            while (stackDepth > 0 && !stack.hasNext(stackDepth)) {
                 --stackDepth;
             }
         }
