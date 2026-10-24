@@ -23,12 +23,12 @@
     ".modautomator/work-manifests/biolith-cps-20261024.json"
   ],
   "value_case": {
-    "category": "material_future_work_reduction",
-    "statement": "Reduce Biolith search traversal allocations while preserving biome selection and all gameplay behavior.",
+    "category": "measured_risk_reduction",
+    "statement": "Reduce repeated biome-search allocation while preserving exact output semantics.",
     "acceptance": [
-      "Pinned-source differential parity for selected node identity, both distances, callback order and fallback state, including reentrancy and exceptions.",
-      "Successful NeoForge build and exact CI artifact provenance before server acceptance.",
-      "Real runtime, output parity and controlled CPS evidence before claiming a server improvement."
+      "Differential equality of winners, distances and callback trace.",
+      "Preserved reentrancy, exception and thread behavior.",
+      "Same-stack Kinetic CPS comparison with no content removed."
     ]
   }
 }
