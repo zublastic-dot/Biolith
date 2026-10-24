@@ -1,0 +1,35 @@
+{
+  "schema_version": 2,
+  "work_id": "biolith-cps-20261024",
+  "lease_id": "biolith-cps-20261024",
+  "worker_id": "codex-biolith-cps-20261024",
+  "repository": "zublastic-dot/biolith",
+  "work_branch": "work/codex-biolith-cps-20261024/iterator-reuse",
+  "base_commit": "996b7a468ce7c36d2883e70eae3a8c87a30bae63",
+  "resources": [
+    "domain:worldgen-performance",
+    "domain:biolith:search-traversal",
+    "repo:zublastic-dot/biolith",
+    "workspace:owner-pc:M/BiolithCps-20261024"
+  ],
+  "paths": [
+    "common/src/main/java/com/terraformersmc/biolith/impl/mixin/MixinSearchTree.java",
+    "common/src/main/java/com/terraformersmc/biolith/impl/biome/SearchTreeTraversalStack.java",
+    "tests/differential",
+    "tests/mixin_initializers",
+    "build.gradle",
+    "gradle.properties",
+    ".github/workflows/biolith_cps_candidate.yml",
+    "docs/BIOLITH_CPS_CANDIDATE.md"
+  ],
+  "value_case": {
+    "category": "measured_risk_reduction",
+    "statement": "Reduce repeated biome-search allocation while preserving exact output semantics.",
+    "acceptance": [
+      "Differential equality of winners, distances and callback trace.",
+      "Preserved reentrancy, exception and thread behavior.",
+      "Built artifact preserves all cache initializers under the exact Kinetic Mixin extractor.",
+      "Same-stack Kinetic CPS comparison with no content removed."
+    ]
+  }
+}
