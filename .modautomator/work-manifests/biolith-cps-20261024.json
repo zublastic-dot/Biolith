@@ -16,6 +16,7 @@
     "common/src/main/java/com/terraformersmc/biolith/impl/mixin/MixinSearchTree.java",
     "common/src/main/java/com/terraformersmc/biolith/impl/biome/SearchTreeTraversalStack.java",
     "tests/differential",
+    "tests/mixin_initializers",
     "build.gradle",
     "gradle.properties",
     ".github/workflows/biolith_cps_candidate.yml",
@@ -28,6 +29,7 @@
     "acceptance": [
       "Differential equality of winners, distances and callback trace.",
       "Preserved reentrancy, exception and thread behavior.",
+      "Built artifact preserves all cache initializers under the exact Kinetic Mixin extractor.",
       "Same-stack Kinetic CPS comparison with no content removed."
     ]
   }

@@ -27,9 +27,10 @@ public class MixinSearchTree<T> implements InterfaceSearchTree<T> {
     @Unique
     private final ThreadLocal<MultiNoiseUtil.SearchTree.TreeLeafNode<T>> previousPenultimateNode = new ThreadLocal<>();
 
-    @Unique
-    private final ThreadLocal<SearchTreeTraversalStack<MultiNoiseUtil.SearchTree.TreeNode<T>>> biolith$traversalStack =
-            ThreadLocal.withInitial(SearchTreeTraversalStack::new);
+    // Keep annotation and initializer on one line. Otherwise javac can mark RETURN
+    // at the annotation's earlier line, causing Mixin to drop the preceding cache
+    // initializers. The real-Mixin artifact regression checks this boundary.
+    @Unique private final ThreadLocal<SearchTreeTraversalStack<MultiNoiseUtil.SearchTree.TreeNode<T>>> biolith$traversalStack = ThreadLocal.withInitial(SearchTreeTraversalStack::new);
 
     /*
      * This is a flattened, stack-based implementation of Mojang's recursive RTree search.

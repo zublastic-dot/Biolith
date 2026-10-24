@@ -29,6 +29,8 @@ jobs:
         run: python -B tests/differential/run.py
       - name: Build NeoForge runtime artifact
         run: bash ./gradlew :neoforge:remapJar --no-daemon --console=plain
+      - name: Verify real Mixin field initializer extraction
+        run: python -B tests/mixin_initializers/run.py
       - name: Package exact artifact and provenance
         run: python -B tests/differential/package_artifact.py
       - uses: actions/upload-artifact@v4

@@ -1,0 +1,37 @@
+[
+  {
+    "group": "net.fabricmc",
+    "name": "sponge-mixin",
+    "version": "0.16.4+mixin.0.8.7",
+    "repository": "https://maven.fabricmc.net",
+    "sha256": "921a2ca066d82d15d2939efd5eb22754e308db74b1e4277130a76625c3638dfd"
+  },
+  {
+    "group": "org.ow2.asm",
+    "name": "asm",
+    "version": "9.8",
+    "repository": "https://repo.maven.apache.org/maven2",
+    "sha256": "876eab6a83daecad5ca67eb9fcabb063c97b5aeb8cf1fca7a989ecde17522051"
+  },
+  {
+    "group": "org.ow2.asm",
+    "name": "asm-tree",
+    "version": "9.8",
+    "repository": "https://repo.maven.apache.org/maven2",
+    "sha256": "14b7880cb7c85eed101e2710432fc3ffb83275532a6a894dc4c4095d49ad59f1"
+  },
+  {
+    "group": "org.ow2.asm",
+    "name": "asm-util",
+    "version": "9.8",
+    "repository": "https://repo.maven.apache.org/maven2",
+    "sha256": "8ba0460ecb28fd0e2980e5f3ef3433a513a457bc077f81a53bdc75b587a08d15"
+  },
+  {
+    "group": "org.ow2.asm",
+    "name": "asm-analysis",
+    "version": "9.8",
+    "repository": "https://repo.maven.apache.org/maven2",
+    "sha256": "e640732fbcd3c6271925a504f125e38384688f4dfbbf92c8622dfcee0d09edb9"
+  }
+]
